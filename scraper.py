@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Скрейпер расписания физфака МГУ (ras.phys.msu.ru) -> schedule.json.
 
-Запуск:  python3 scraper.py [-o schedule.json] [--cache DIR]
+Запуск:  python3 scraper.py [-o data/schedule.json] [--cache DIR]
 
 Каждая запись:
   {"group", "course", "day", "pair", "week", "subject", "kind", "room", "teacher"}
@@ -296,7 +296,7 @@ def parse_page(html: str, course: int) -> list[dict]:
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("-o", "--output", default="schedule.json")
+    ap.add_argument("-o", "--output", default="data/schedule.json")
     ap.add_argument("--cache", help="папка для сохранения скачанных страниц (UTF-8)")
     args = ap.parse_args()
     cache = Path(args.cache) if args.cache else None
@@ -319,8 +319,12 @@ def main():
                 new += 1
         print(f"  {path}: {new} записей", file=sys.stderr)
 
+    if not all_records:
+        sys.exit("Ни одной записи — страницы не разобрались, файл не перезаписан")
     all_records.sort(key=lambda x: (x["course"], x["group"], x["day"], x["pair"], x["week"]))
-    Path(args.output).write_text(json.dumps(all_records, ensure_ascii=False, indent=1), encoding="utf-8")
+    # одна запись на строку: файл компактный, а изменения расписания читаются в git diff
+    lines = ",\n".join(json.dumps(r, ensure_ascii=False, separators=(",", ":")) for r in all_records)
+    Path(args.output).write_text(f"[\n{lines}\n]\n", encoding="utf-8")
     n_raw = sum("raw" in r for r in all_records)
     print(f"Сохранено {len(all_records)} записей в {args.output} (с raw: {n_raw})", file=sys.stderr)
 

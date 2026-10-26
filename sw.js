@@ -1,6 +1,6 @@
-// При обновлении расписания поменяйте версию, чтобы у всех подтянулась новая
-const VERSION = "rooms-2026-10-26g";
-const ASSETS = ["/", "/manifest.webmanifest", "/icons/apple-touch-icon.png", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/favicon-32.png"];
+// Версию поднимает GitHub Action при обновлении расписания; при ручных правках сайта поднимайте сами
+const VERSION = "rooms-2026-10-26h";
+const ASSETS = ["/", "/data/schedule.json", "/manifest.webmanifest", "/icons/apple-touch-icon.png", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/favicon-32.png"];
 
 self.addEventListener("install", e => {
   e.waitUntil(caches.open(VERSION).then(c => c.addAll(ASSETS)).then(() => self.skipWaiting()));
@@ -11,9 +11,13 @@ self.addEventListener("activate", e => {
 self.addEventListener("fetch", e => {
   const req = e.request;
   if (req.method !== "GET" || new URL(req.url).origin !== location.origin) return;
-  // Страница: сначала сеть (свежие данные), без сети — кэш
-  if (req.mode === "navigate") {
-    e.respondWith(fetch(req).then(r => { const copy = r.clone(); caches.open(VERSION).then(c => c.put("/", copy)); return r; }).catch(() => caches.match("/")));
+  // Страница и расписание: сначала сеть (свежие данные), без сети — кэш
+  const key = req.mode === "navigate" ? "/" : new URL(req.url).pathname === "/data/schedule.json" ? "/data/schedule.json" : null;
+  if (key) {
+    e.respondWith(fetch(req).then(r => {
+      if (r.ok) { const copy = r.clone(); caches.open(VERSION).then(c => c.put(key, copy)); }
+      return r;
+    }).catch(() => caches.match(key)));
     return;
   }
   // Остальное: кэш, затем сеть
