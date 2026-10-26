@@ -1,5 +1,5 @@
 // При обновлении расписания поменяйте версию, чтобы у всех подтянулась новая
-const VERSION = "rooms-2026-10-26f";
+const VERSION = "rooms-2026-10-26g";
 const ASSETS = ["/", "/manifest.webmanifest", "/icons/apple-touch-icon.png", "/icons/icon-192.png", "/icons/icon-512.png", "/icons/favicon-32.png"];
 
 self.addEventListener("install", e => {
