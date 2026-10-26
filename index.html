@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Свободные аудитории — физфак МГУ</title>
+<meta name="description" content="Свободные аудитории физического факультета МГУ на каждую пару, осенний семестр 2026/27.">
+<meta name="theme-color" content="#f0eee6" id="themeColor">
+<meta name="color-scheme" content="light dark">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default" id="statusBar">
+<meta name="apple-mobile-web-app-title" content="Аудитории">
+<meta name="format-detection" content="telephone=no">
+<link rel="manifest" href="/manifest.webmanifest">
+<link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32.png">
+<script>
+/* Тема ставится до отрисовки, чтобы не было вспышки */
+(function(){try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t);}catch(e){}})();
+</script>
+<style>
+:root{
+  --canvas:#f0eee6; --card:#faf9f5; --feature:#f5e3c7; --oat:#e3dacc;
+  --ink:#141413; --muted:#5f5e58; --faint:#87867f; --line:#cccbc8;
+  --sel-bg:#141413; --sel-ink:#faf9f5;
+  --clay:#d97757; --clay-deep:#c6613f; --on-clay:#faf9f5;
+  --inv:#141413; --inv-ink:#faf9f5; --inv-muted:#b0aea5;
+  --serif:ui-serif,"Iowan Old Style","Charter","Georgia",Cambria,"Times New Roman",serif;
+  --sans:ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  color-scheme:light;
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --canvas:#141413; --card:#1e1d1b; --feature:#2b2722; --oat:#262421;
+    --ink:#f0eee6; --muted:#b0aea5; --faint:#87867f; --line:#3d3d3a;
+    --sel-bg:#f0eee6; --sel-ink:#141413;
+    --inv:#0c0c0b; --inv-ink:#f0eee6; --inv-muted:#87867f;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --canvas:#141413; --card:#1e1d1b; --feature:#2b2722; --oat:#262421;
+  --ink:#f0eee6; --muted:#b0aea5; --faint:#87867f; --line:#3d3d3a;
+  --sel-bg:#f0eee6; --sel-ink:#141413;
+  --inv:#0c0c0b; --inv-ink:#f0eee6; --inv-muted:#87867f;
+  color-scheme:dark;
+}
+*,*::before,*::after{box-sizing:inherit}
+html{height:100%;scroll-padding-top:calc(env(safe-area-inset-top,0px) + 180px);-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{
+  margin:0;min-height:100%;background:var(--canvas);color:var(--ink);
+  font-family:var(--serif);font-size:18px;line-height:1.4;
+  -webkit-font-smoothing:antialiased;-webkit-tap-highlight-color:transparent;
+  display:flex;flex-direction:column;
+}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--canvas);z-index:20}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+
+.skip{position:absolute;left:12px;top:-60px;background:var(--card);color:var(--ink);padding:8px 12px;font-family:var(--sans);font-size:15px;z-index:30}
+.skip:focus{top:calc(env(safe-area-inset-top,0px) + 8px)}
+
+.wrap{width:100%;max-width:880px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+
+/* Шапка */
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-top:14px;padding-bottom:4px;font-family:var(--sans)}
+.mark{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}
+.theme{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.theme button{background:transparent;border:0;padding:7px 11px;font-size:13px;color:var(--muted);cursor:pointer;min-height:34px}
+.theme button[aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-ink)}
+
+.hero{padding-top:20px;padding-bottom:8px}
+h1{font-family:var(--serif);font-weight:400;font-size:clamp(34px,8vw,56px);line-height:1.08;margin:0 0 12px;letter-spacing:0}
+.lede{margin:0;max-width:34em;color:var(--muted);font-size:17px}
+
+/* Панель выбора — липкая */
+.controls{position:sticky;top:env(safe-area-inset-top,0px);z-index:10;background:var(--canvas);padding-top:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.seg{display:grid;gap:6px;font-family:var(--sans)}
+.days{grid-template-columns:repeat(6,1fr);margin-bottom:6px}
+.pairs{grid-template-columns:repeat(6,1fr)}
+.seg button{
+  background:var(--card);border:1px solid var(--line);border-radius:0 0 8px 8px;
+  padding:9px 4px;cursor:pointer;font-size:15px;font-weight:500;letter-spacing:-.005em;
+  min-height:44px;touch-action:manipulation;position:relative;
+}
+.seg button[aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-ink);border-color:var(--sel-bg)}
+.pairs button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;line-height:1.1}
+.pairs small{font-size:11px;font-weight:400;opacity:.75;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.seg button.is-now::after{content:"";position:absolute;top:5px;right:5px;width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.55}
+.row{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:8px;min-height:36px;font-family:var(--sans)}
+.wings{display:inline-flex;border:1px solid var(--line);border-radius:12px;overflow:hidden}
+.wings button{background:transparent;border:0;padding:7px 12px;font-size:14px;color:var(--muted);cursor:pointer;min-height:36px;touch-action:manipulation}
+.wings button[aria-pressed="true"]{background:var(--sel-bg);color:var(--sel-ink)}
+.wing{display:grid;grid-template-columns:52px 1fr;gap:10px;align-items:start}
+.wing+.wing{margin-top:10px}
+.wing-name{font-family:var(--sans);font-size:12px;color:var(--faint);letter-spacing:-.02em;padding-top:8px}
+.now-btn{background:var(--clay);color:var(--on-clay);border:0;border-radius:0 0 8px 8px;padding:7px 16px;font-size:14px;font-weight:500;cursor:pointer;min-height:36px;touch-action:manipulation;white-space:nowrap}
+.now-btn:hover,.now-btn:active{background:var(--clay-deep)}
+.now-btn[hidden]{display:none}
+
+/* Результат */
+main{flex:1}
+.summary{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;padding-top:22px;padding-bottom:6px}
+.count{font-family:var(--serif);font-size:clamp(56px,14vw,84px);line-height:1;font-variant-numeric:tabular-nums}
+.count-label{font-size:17px;color:var(--muted)}
+.note{background:var(--feature);border-radius:24px;padding:16px 20px;margin:14px 0 4px;font-size:16px}
+.note[hidden]{display:none}
+
+.sheet{background:var(--card);border:1px solid var(--line);border-radius:24px;margin:16px 0 8px;overflow:hidden}
+.group{padding:16px 18px 18px}
+.group+.group{border-top:1px solid var(--line)}
+.group h2{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:-.005em;color:var(--muted);margin:0 0 10px;display:flex;justify-content:space-between}
+.group h2 span{font-weight:400;font-variant-numeric:tabular-nums}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:0;padding:0;list-style:none}
+.chip{font-family:var(--sans);font-size:15px;font-weight:500;font-variant-numeric:tabular-nums;padding:6px 10px;border:1px solid var(--line);border-radius:0 0 8px 8px;background:var(--canvas);line-height:1.2}
+.chip.busy{background:transparent;color:var(--faint);text-decoration:line-through;border-style:dashed}
+.empty{padding:20px 18px;color:var(--muted)}
+
+.toggle{display:flex;align-items:center;gap:10px;font-family:var(--sans);font-size:15px;color:var(--muted);padding:6px 0 28px;cursor:pointer;min-height:44px}
+.toggle input{width:20px;height:20px;accent-color:var(--ink);margin:0}
+
+/* Подвал — единственная инверсия */
+footer{background:var(--inv);color:var(--inv-ink);font-family:var(--sans);font-size:13px;line-height:1.5;margin-top:24px}
+footer .wrap{padding-top:28px;padding-bottom:28px}
+footer .disclaimer{color:var(--inv-ink);font-weight:500}
+footer p{margin:0 0 14px;color:var(--inv-muted)}
+footer p:last-child{margin-bottom:0}
+footer a{color:var(--inv-ink);text-decoration:underline;text-underline-offset:2px}
+.install{display:none}
+.standalone-hide{}
+@media (display-mode:standalone){.standalone-hide{display:none}}
+
+@media (max-width:520px){
+  body{font-size:17px}
+  .pairs{grid-template-columns:repeat(3,1fr)}
+  .seg button{font-size:14px;padding:8px 2px}
+  .group{padding:14px 14px 16px}
+  .sheet,.note{border-radius:20px}
+}
+@media (min-width:900px){
+  .hero{padding-top:36px}
+}
+@media (prefers-reduced-motion:no-preference){
+  .count{transition:opacity .15s}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#result">К списку аудиторий</a>
+
+<header class="wrap">
+  <div class="top">
+    <span class="mark">Физфак МГУ</span>
+    <div class="theme" role="group" aria-label="Тема">
+      <button type="button" data-theme="auto">Авто</button>
+      <button type="button" data-theme="light">Светлая</button>
+      <button type="button" data-theme="dark">Тёмная</button>
+    </div>
+  </div>
+  <div class="hero">
+    <h1>Где свободно</h1>
+    <p class="lede">Аудитории, которые по расписанию пустуют в выбранную пару. Осенний семестр 2026/27.</p>
+  </div>
+</header>
+
+<div class="controls">
+  <div class="wrap">
+    <div class="seg days" id="days" role="group" aria-label="День недели"></div>
+    <div class="seg pairs" id="pairs" role="group" aria-label="Пара"></div>
+    <div class="row">
+      <div class="wings" id="wings" role="group" aria-label="Крыло">
+        <button type="button" data-w="all">Все</button>
+        <button type="button" data-w="n">Север</button>
+        <button type="button" data-w="s">Юг</button>
+      </div>
+      <button type="button" class="now-btn" id="nowBtn">Сейчас</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap" id="result" tabindex="-1">
+  <div class="summary" aria-live="polite">
+    <span class="count" id="count">0</span>
+    <span class="count-label" id="countLabel"></span>
+  </div>
+  <p class="note" id="note" hidden></p>
+  <div class="sheet" id="groups"></div>
+  <label class="toggle"><input type="checkbox" id="showBusy"> Показывать и занятые</label>
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="disclaimer">Сайт полностью навайбкожен и носит ознакомительный характер. Создатель не несёт ответственности за достоверность информации. Свободна ли аудитория, проверяйте сами: её могут занять преподаватели под дополнительные занятия.</p>
+    <p>Свободна — значит, по расписанию в эту пару там никого нет. Числитель и знаменатель объединены. Север — крыло слева от ЦФА на схеме этажей, юг — справа. Не показаны 1 и цокольный этажи, кафедры, ГАИШ и другие корпуса.</p>
+    <p class="standalone-hide">На iPhone: Safari → «Поделиться» → «На экран „Домой“», будет работать и без интернета.</p>
+    <p>Данные: <a href="http://ras.phys.msu.ru/table" rel="noopener">ras.phys.msu.ru</a>, осенний семестр 2026/27.</p>
+  </div>
+</footer>
+
+<script>
+const DATA = {"rooms": ["5-08", "5-10", "5-12", "5-13", "5-18", "5-19", "5-23", "5-24", "5-25", "5-26", "5-27", "5-33а", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-54", "5-55", "5-57", "5-58", "5-65", "5-68", "4-05", "4-22а", "4-28", "4-30", "4-46", "4-58", "4-60", "4-64", "4-68", "3-13", "3-31", "3-31а", "3-32б", "3-43", "3-53", "3-77", "3-79", "2-31", "2-32", "2-44", "2-56", "2-59", "2-61", "2-68", "2-81", "2-82", "1-15", "1-22а", "1-31", "1-32", "1-35", "1-41", "1-42", "Н-8", "Н-9", "Н-11", "Н-13", "Н-16", "Н-38", "Ц-24в", "Ц-25", "Ц-30", "Ц-35", "Ц-39", "Ц-39а", "Ц-67", "Ц-74", "Ц-75", "СФА", "Хохлова", "ЮФА"], "busy": {"1.1": ["5-10", "5-12", "5-18", "5-23", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-41", "5-44", "5-45", "5-46", "5-47", "5-48", "5-50", "5-51", "5-53", "5-55", "4-22а", "4-28", "4-46", "4-58", "4-68", "3-32б", "3-43", "3-53", "2-31", "2-44", "2-59", "1-15", "1-32", "1-41", "Н-8", "Н-38", "Ц-25", "Ц-30", "Ц-39", "Ц-67", "Ц-74", "СФА", "Хохлова", "ЮФА"], "1.2": ["5-10", "5-18", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "5-68", "4-22а", "4-28", "4-46", "4-58", "4-64", "4-68", "3-32б", "3-77", "2-31", "2-32", "2-56", "2-59", "1-15", "1-22а", "1-31", "1-32", "1-41", "1-42", "Н-8", "Н-9", "Н-38", "Ц-25", "Ц-30", "Ц-35", "Ц-39", "Ц-67", "Ц-74", "Ц-75", "СФА", "Хохлова", "ЮФА"], "1.3": ["5-13", "5-18", "5-19", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-58", "5-68", "4-22а", "4-46", "4-68", "3-32б", "3-53", "3-77", "3-79", "2-31", "2-32", "2-59", "2-82", "1-15", "1-22а", "1-31", "1-32", "1-41", "Н-8", "Н-9", "Н-11", "Н-38", "Ц-25", "Ц-30", "Ц-35", "Ц-39", "Ц-39а", "Ц-67", "Ц-74", "Ц-75", "СФА", "Хохлова", "ЮФА"], "1.4": ["5-10", "5-12", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "5-58", "5-68", "4-22а", "4-46", "4-58", "4-64", "3-32б", "3-77", "3-79", "2-32", "2-59", "2-81", "1-15", "1-22а", "1-31", "1-32", "1-41", "1-42", "Н-8", "Н-9", "Н-16", "Н-38", "Ц-25", "Ц-30", "Ц-39", "Ц-39а", "Ц-67", "Ц-75", "Хохлова"], "1.5": ["5-10", "5-12", "5-19", "5-23", "5-24", "5-25", "5-26", "5-37", "5-38", "5-39", "5-47", "5-48", "5-49", "5-51", "5-53", "5-68", "4-05", "4-28", "4-64", "4-68", "3-31", "3-32б", "3-77", "1-15", "1-22а", "1-31", "1-41", "1-42", "Н-13", "Н-16", "Н-38", "Ц-25", "Ц-30", "Ц-35", "Ц-39", "Ц-67", "Ц-75", "СФА", "ЮФА"], "2.1": ["5-18", "5-25", "5-27", "5-35", "5-37", "5-39", "5-41", "5-42", "5-45", "5-46", "5-47", "5-49", "5-51", "5-52", "5-53", "5-55", "4-22а", "4-46", "4-58", "4-68", "3-32б", "3-77", "2-32", "2-81", "2-82", "1-15", "1-31", "1-32", "1-41", "Ц-25", "Ц-30", "Ц-35", "Ц-39", "Ц-75", "СФА", "Хохлова"], "2.2": ["5-13", "5-18", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-39", "5-40", "5-41", "5-44", "5-45", "5-46", "5-47", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "5-65", "5-68", "4-22а", "4-28", "4-30", "4-46", "3-32б", "3-77", "2-31", "2-32", "2-59", "1-15", "1-31", "1-32", "1-41", "Н-9", "Ц-24в", "Ц-30", "Ц-75", "СФА", "Хохлова", "ЮФА"], "2.3": ["5-12", "5-13", "5-18", "5-19", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "5-65", "5-68", "4-28", "4-58", "4-68", "3-13", "3-32б", "3-53", "3-77", "2-31", "2-32", "2-59", "2-61", "1-15", "1-31", "1-32", "1-41", "Н-8", "Н-9", "Н-38", "Ц-25", "Ц-39а", "Ц-67", "Ц-75", "СФА", "Хохлова"], "2.4": ["5-18", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-68", "4-28", "4-30", "4-46", "4-58", "3-13", "3-32б", "3-53", "3-77", "2-32", "2-59", "2-81", "2-82", "1-15", "1-31", "1-32", "1-41", "1-42", "Н-11", "Н-13", "Н-38", "Ц-25", "Ц-39а", "Ц-67", "Ц-75", "СФА", "Хохлова"], "3.1": ["5-08", "5-19", "5-23", "5-24", "5-25", "5-26", "5-35", "5-39", "5-40", "5-41", "5-45", "5-46", "5-47", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "4-22а", "4-46", "3-77", "2-59", "1-15", "1-31", "1-32", "1-42", "Ц-25", "Ц-35", "Ц-39", "Ц-67", "СФА", "Хохлова", "ЮФА"], "3.2": ["5-18", "5-19", "5-23", "5-24", "5-25", "5-26", "5-35", "5-36", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "4-22а", "4-46", "4-58", "4-60", "3-13", "3-32б", "3-77", "2-59", "2-82", "1-15", "1-31", "1-32", "1-41", "Ц-25", "Ц-35", "Ц-39", "Ц-39а", "Ц-75", "СФА", "Хохлова", "ЮФА"], "4.1": ["5-24", "5-25", "5-26", "5-33а", "5-35", "5-36", "5-37", "5-38", "5-39", "5-41", "5-45", "5-46", "5-47", "5-49", "5-50", "5-68", "4-22а", "4-46", "4-58", "2-31", "2-44", "2-82", "1-31", "1-32", "1-42", "Ц-25", "Ц-39", "СФА", "Хохлова"], "4.2": ["5-23", "5-24", "5-25", "5-26", "5-33а", "5-36", "5-37", "5-39", "5-40", "5-41", "5-42", "5-45", "5-46", "5-48", "5-49", "5-50", "5-51", "5-53", "5-68", "4-22а", "4-28", "2-31", "2-32", "2-61", "2-68", "2-82", "1-31", "1-32", "1-42", "Ц-25", "Ц-30", "Ц-35", "Ц-75", "СФА", "Хохлова", "ЮФА"], "4.3": ["5-08", "5-18", "5-23", "5-24", "5-25", "5-26", "5-27", "5-33а", "5-35", "5-36", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-68", "4-22а", "4-58", "3-77", "3-79", "2-32", "1-22а", "1-31", "1-32", "1-42", "Н-8", "Н-9", "Н-11", "Н-38", "Ц-24в", "Ц-25", "Ц-35", "Ц-67", "Ц-75", "СФА"], "4.4": ["5-08", "5-10", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-53", "4-22а", "4-46", "4-58", "3-13", "3-77", "2-31", "2-32", "2-82", "1-22а", "1-31", "1-32", "1-42", "Н-8", "Н-9", "Н-11", "Н-38", "Ц-25", "Ц-30", "Ц-35", "Ц-67"], "4.5": ["5-10", "5-19", "5-23", "5-38", "5-48", "5-49", "5-50", "5-51", "5-52", "5-55", "5-68", "4-28", "4-58", "3-32б", "3-43", "3-77", "2-32", "2-56", "1-31", "1-41", "1-42", "Ц-25", "Ц-35", "Ц-39а", "СФА"], "5.1": ["5-10", "5-12", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-38", "5-39", "5-40", "5-41", "5-45", "5-48", "5-49", "5-50", "5-51", "5-52", "5-68", "4-28", "4-46", "4-58", "3-32б", "3-53", "2-82", "1-15", "1-31", "1-32", "Н-8", "Н-13", "Н-16", "Ц-25", "Ц-39", "СФА", "Хохлова", "ЮФА"], "5.2": ["5-10", "5-12", "5-13", "5-18", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-42", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-68", "4-28", "4-30", "4-46", "4-58", "3-32б", "3-77", "2-31", "2-32", "2-61", "2-82", "1-22а", "1-31", "1-32", "1-42", "Н-8", "Н-9", "Н-11", "Ц-24в", "Ц-25", "Ц-30", "Ц-35", "Ц-39", "Ц-67", "Ц-75", "СФА", "Хохлова", "ЮФА"], "5.3": ["5-13", "5-18", "5-19", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-65", "5-68", "4-28", "4-30", "4-46", "4-58", "3-53", "3-77", "2-32", "1-22а", "1-31", "1-32", "Н-9", "Н-13", "Н-38", "Ц-25", "Ц-67", "Ц-75", "СФА", "Хохлова", "ЮФА"], "5.4": ["5-10", "5-12", "5-13", "5-18", "5-19", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-38", "5-39", "5-40", "5-42", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-55", "5-68", "4-28", "4-30", "4-46", "4-58", "3-13", "3-53", "3-77", "2-32", "1-22а", "1-31", "1-32", "Н-8", "Н-9", "Н-16", "Н-38", "Ц-24в", "Ц-25", "Ц-35", "Ц-67", "Ц-75", "СФА", "Хохлова"], "5.5": ["5-10", "5-23", "5-27", "5-38", "5-39", "5-49", "5-51", "5-68", "4-28", "4-30", "2-59", "1-15", "1-22а", "Н-13", "Н-16", "Н-38", "Ц-24в", "Ц-25", "Ц-35", "Ц-67", "Ц-75", "СФА", "Хохлова", "ЮФА"], "6.1": ["5-24", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-44", "5-45", "5-49", "5-50", "5-55", "5-68", "4-46", "1-35", "Н-8", "Н-13", "Н-38", "Ц-39", "Ц-67", "Ц-75", "СФА"], "6.2": ["5-18", "5-19", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-37", "5-38", "5-39", "5-40", "5-41", "5-44", "5-45", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "5-68", "4-22а", "4-46", "3-43", "3-77", "2-32", "2-59", "2-82", "1-22а", "1-41", "1-42", "Н-8", "Н-9", "Н-16", "Ц-39", "Ц-67", "Ц-75", "СФА", "Хохлова"], "2.5": ["5-19", "5-23", "5-26", "5-27", "5-37", "5-38", "5-39", "5-47", "5-49", "5-51", "5-55", "4-28", "4-30", "4-58", "3-13", "3-77", "2-59", "2-82", "1-15", "1-41", "1-42", "Ц-25", "Ц-30", "Ц-35", "Ц-39а", "Ц-67", "Ц-75", "СФА", "Хохлова"], "3.3": ["5-10", "5-13", "5-18", "5-23", "5-24", "5-25", "5-26", "5-27", "5-35", "5-36", "5-38", "5-39", "5-40", "5-46", "5-47", "5-48", "5-49", "5-50", "5-51", "5-52", "5-53", "5-55", "5-68", "4-30", "4-46", "4-58", "4-68", "3-31а", "2-32", "2-82", "1-15", "1-31", "1-32", "Н-8", "Ц-30", "Ц-35", "Ц-39", "Ц-67", "Ц-75", "СФА", "Хохлова", "ЮФА"], "6.3": ["5-19", "5-24", "5-25", "5-27", "5-39", "5-41", "5-45", "5-46", "5-47", "5-49", "5-50", "5-51", "5-52", "5-54", "5-55", "5-57", "5-68", "4-46", "4-58", "2-82", "1-35", "Н-9", "Н-38", "Ц-67", "Ц-75", "Хохлова"], "6.4": ["5-10", "5-18", "5-24", "5-37", "5-41", "5-44", "5-45", "5-46", "5-47", "5-54", "5-55", "5-57", "4-46", "4-58", "2-82"], "6.5": ["5-24", "5-48", "5-49", "5-55"], "1.6": [], "2.6": [], "3.4": [], "3.5": [], "3.6": [], "4.6": [], "5.6": [], "6.6": []}};
+const DAYS = ["Пн","Вт","Ср","Чт","Пт","Сб"];
+const DAYS_FULL = ["понедельник","вторник","среда","четверг","пятница","суббота"];
+const TIMES = ["9:00–10:35","10:50–12:25","13:30–15:05","15:20–16:55","17:05–18:40","18:55–20:30"];
+const ENDS = [635,745,905,1015,1120,1230]; // минуты от полуночи
+const GROUPS = [
+  ["5 этаж", r => /^5-/.test(r)],
+  ["4 этаж", r => /^4-/.test(r)],
+  ["3 этаж", r => /^3-/.test(r)],
+  ["2 этаж", r => /^2-/.test(r)],
+  ["1 этаж", r => /^1-/.test(r)],
+  ["Аудитории Н", r => /^Н-/.test(r)],
+  ["Аудитории Ц", r => /^Ц-/.test(r)],
+  ["Поточные", r => ["СФА","ЮФА","Хохлова"].includes(r)]
+];
+/* Скрыты из интерфейса (там в основном лаборатории), данные остаются в DATA.
+   Чтобы вернуть этаж, убери его название из этого списка. */
+const HIDDEN_GROUPS = new Set(["1 этаж", "Аудитории Ц"]);
+const SHOWN_GROUPS = GROUPS.filter(([name]) => !HIDDEN_GROUPS.has(name));
+const isShown = r => SHOWN_GROUPS.some(([, f]) => f(r));
+/* Крыло по схемам этажей: n — север (слева от ЦФА), s — юг, c — центр */
+const WING_CENTER = new Set(["Хохлова","3-43","Н-8","Н-9","Н-11","Н-13","Н-16","Н-38"]);
+const WING_SOUTH = new Set([
+  "5-08","5-10","5-12","5-13","5-18","5-19","5-23","5-24","5-25","5-26","5-27","5-38","5-39","5-40","5-41","5-42",
+  "4-05","4-22а","4-28","4-30",
+  "3-13","3-31","3-31а","3-32б","3-53",
+  "2-31","2-32","2-44",
+  "1-15","1-22а","1-31","1-41","1-42",
+  "Ц-24в","Ц-25","Ц-30","ЮФА"
+]);
+const wingOf = r => WING_CENTER.has(r) ? "c" : WING_SOUTH.has(r) ? "s" : "n";
+const WING_NAMES = { n:"Север", c:"Центр", s:"Юг" };
+const $ = id => document.getElementById(id);
+const store = {
+  get(k){ try { return localStorage.getItem(k); } catch(e){ return null; } },
+  set(k,v){ try { localStorage.setItem(k,v); } catch(e){} }
+};
+
+/* ---- Текущее время в Москве ---- */
+function moscowNow(){
+  const parts = new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Moscow",weekday:"short",hour:"2-digit",minute:"2-digit",hourCycle:"h23"}).formatToParts(new Date());
+  const get = t => parts.find(p => p.type === t).value;
+  const wd = ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].indexOf(get("weekday"));
+  return { wd, min: (+get("hour"))*60 + (+get("minute")) };
+}
+/* Текущая или ближайшая пара; inSession — идёт ли учебный день */
+function currentSlot(){
+  const {wd, min} = moscowNow();
+  let d = wd, p = ENDS.findIndex(e => min <= e) + 1;
+  let live = d >= 1 && d <= 6 && p > 0;
+  if (d === 0 || d > 6) { d = 1; p = 1; }
+  else if (p === 0) { d = d === 6 ? 1 : d + 1; p = 1; }
+  return { day:d, pair:p, live };
+}
+
+let now = currentSlot();
+let day = now.day, pair = now.pair;
+let wing = (() => { try { const w = localStorage.getItem("wing"); return ["all","n","s"].includes(w) ? w : "all"; } catch(e){ return "all"; } })();
+(function readHash(){
+  const m = location.hash.match(/^#d([1-6])p([1-6])$/);
+  if (m) { day = +m[1]; pair = +m[2]; }
+})();
+
+/* ---- Тема ---- */
+function applyTheme(t){
+  const root = document.documentElement;
+  if (t === "light" || t === "dark") root.setAttribute("data-theme", t);
+  else root.removeAttribute("data-theme");
+  document.querySelectorAll(".theme button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.theme === (t || "auto"))));
+  const dark = t === "dark" || (t !== "light" && matchMedia("(prefers-color-scheme: dark)").matches);
+  $("themeColor").setAttribute("content", dark ? "#141413" : "#f0eee6");
+  $("statusBar").setAttribute("content", dark ? "black" : "default");
+}
+document.querySelector(".theme").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  const t = b.dataset.theme;
+  store.set("theme", t);
+  applyTheme(t);
+});
+matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change", () => applyTheme(store.get("theme") || "auto"));
+applyTheme(store.get("theme") || "auto");
+
+/* ---- Отрисовка ---- */
+function renderControls(){
+  $("days").innerHTML = DAYS.map((d,i) =>
+    `<button type="button" data-d="${i+1}" aria-pressed="${i+1===day}" aria-label="${DAYS_FULL[i]}"${now.live && i+1===now.day ? ' class="is-now"' : ""}>${d}</button>`
+  ).join("");
+  $("pairs").innerHTML = TIMES.map((t,i) =>
+    `<button type="button" data-p="${i+1}" aria-pressed="${i+1===pair}"${now.live && day===now.day && i+1===now.pair ? ' class="is-now"' : ""}>${i+1} пара<small>${t}</small></button>`
+  ).join("");
+  const atNow = day === now.day && pair === now.pair;
+  $("nowBtn").hidden = atNow;
+  document.querySelectorAll("#wings button").forEach(b => b.setAttribute("aria-pressed", String(b.dataset.w === wing)));
+}
+function render(){
+  renderControls();
+  const busy = new Set(DATA.busy[day + "." + pair] || []);
+  const showBusy = $("showBusy").checked;
+  const inWing = r => wing === "all" || wingOf(r) === "c" || wingOf(r) === wing;
+  const pool = DATA.rooms.filter(isShown).filter(inWing);
+  const free = pool.filter(r => !busy.has(r));
+  const atNow = day === now.day && pair === now.pair;
+  const when = atNow ? (now.live ? " · идёт сейчас" : " · ближайшая") : "";
+  $("count").textContent = free.length;
+  $("countLabel").textContent = `свободно из ${pool.length}${wing === "all" ? "" : wing === "n" ? " на севере" : " на юге"} · ${DAYS_FULL[day-1]}, ${pair} пара${when}`;
+
+  const note = $("note");
+  if (day === 3 && (pair === 4 || pair === 5)) {
+    note.textContent = "В это время идут межфакультетские курсы. По расписанию физфака аудитории пусты, но МФК могут проходить в них.";
+    note.hidden = false;
+  } else if (busy.size === 0) {
+    note.textContent = "В это время занятий по расписанию физфака нет — свободны все аудитории.";
+    note.hidden = false;
+  } else note.hidden = true;
+
+  const html = SHOWN_GROUPS.map(([name, f]) => {
+    const all = DATA.rooms.filter(f).filter(inWing);
+    const shown = all.filter(r => showBusy || !busy.has(r));
+    if (!shown.length) return "";
+    const nFree = all.filter(r => !busy.has(r)).length;
+    const rows = ["n","c","s"].map(w => {
+      const rs = shown.filter(r => wingOf(r) === w);
+      if (!rs.length) return "";
+      return `<div class="wing"><span class="wing-name">${WING_NAMES[w]}</span><ul class="chips">${
+        rs.map(r => `<li class="chip${busy.has(r) ? " busy" : ""}">${r}</li>`).join("")
+      }</ul></div>`;
+    }).join("");
+    return `<section class="group"><h2>${name}<span>${nFree} из ${all.length}</span></h2>${rows}</section>`;
+  }).join("");
+  $("groups").innerHTML = html || `<p class="empty">Свободных аудиторий нет. Попробуйте соседнюю пару.</p>`;
+
+  const h = `#d${day}p${pair}`;
+  if (location.hash !== h) history.replaceState(null, "", h);
+}
+
+$("days").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { day = +b.dataset.d; render(); } });
+$("pairs").addEventListener("click", e => { const b = e.target.closest("button"); if (b) { pair = +b.dataset.p; render(); } });
+$("wings").addEventListener("click", e => { const b = e.target.closest("button"); if (!b) return; wing = b.dataset.w; try { localStorage.setItem("wing", wing); } catch(err){} render(); });
+$("nowBtn").addEventListener("click", () => { now = currentSlot(); day = now.day; pair = now.pair; render(); });
+$("showBusy").checked = store.get("showBusy") === "1";
+$("showBusy").addEventListener("change", e => { store.set("showBusy", e.target.checked ? "1" : "0"); render(); });
+
+/* Обновлять «сейчас» раз в минуту и при возврате в приложение */
+function tick(){ const n = currentSlot(); if (n.day !== now.day || n.pair !== now.pair || n.live !== now.live) { now = n; renderControls(); } }
+setInterval(tick, 60000);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) tick(); });
+
+render();
+
+/* Офлайн-режим */
+if ("serviceWorker" in navigator && location.protocol === "https:") {
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
+}
+</script>
+</body>
+</html>
